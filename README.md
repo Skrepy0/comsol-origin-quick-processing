@@ -1,6 +1,6 @@
 # COMSOL → Origin 快速处理
 
-Windows 科研绘图工具：在现有 GitHub 项目https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser，接入 Origin 自动绘图和图片导出。
+Windows 科研绘图工具：在[COMSOL-to-CSV-and-Origin-parser](https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser)的基础上，接入 Origin 自动绘图和图片导出。
 
 COMSOL 已求解模型 → 原项目提取并导入 Origin → 配置曲线与样式 → PNG / TIFF / PDF / OPJU。
 
@@ -9,7 +9,7 @@ COMSOL 已求解模型 → 原项目提取并导入 Origin → 配置曲线与�
 需要 Git、64 位 Python 3.11 或 3.12、有效授权的 COMSOL 与 Origin 2025/2025b。
 
 ```powershell
-git clone --recurse-submodules <本仓库地址>
+git clone --recurse-submodules https://github.com/ikunabc/comsol-origin-quick-processing.git
 cd comsol-origin-quick-processing
 ```
 
@@ -61,8 +61,6 @@ CSV 模式不启动 COMSOL。附带 example.csv 是合成数据；不附带科�
 --dry-run 只打印计划；--list-results 加载模型列出 Tables/1D/2D/3D，不求解。
 
 ## 后端与真实 API
-
-原项目：[GhVost/COMSOL-to-CSV-and-Origin-parser](https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser)。
 
 以 Git submodule 保存在 `lib/comsol_csv_tool/`，固定 commit：
 `4c63ac17fbb6272603a893e0233c6d27aa485180`。
