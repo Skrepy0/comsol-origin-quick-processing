@@ -1,0 +1,18 @@
+COMSOL Origin Quick Processing 0.1.0
+Source: https://github.com/ikunabc/comsol-origin-quick-processing
+
+This distribution includes Python and third-party open-source components.
+Their copyrights and license terms remain with their respective authors.
+Dependency licenses and distribution metadata are included in the release ZIP.
+
+COMSOL extraction backend:
+https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser
+Pinned commit: 4c63ac17fbb6272603a893e0233c6d27aa485180
+The backend is included unchanged; it is not an official COMSOL or OriginLab tool.
+
+Major dependencies: CPython, PySide6/Qt, NumPy, pandas, SciPy, matplotlib,
+MPh, JPype, originpro, OriginExt, psutil, Pillow, PyInstaller.
+
+COMSOL and Origin/OriginPro are separately licensed commercial products.
+Neither the COMSOL engine nor the Origin application or a product license is
+included. Install and license those products separately to use their features.

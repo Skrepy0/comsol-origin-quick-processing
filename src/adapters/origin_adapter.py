@@ -48,6 +48,7 @@ class OriginAdapter:
         self.op=None
         self.connected=False
         self.success=False
+        self._project_staging=[]
 
     def connect(self):
         log.info('Connecting to Origin 2025...')
@@ -231,18 +232,33 @@ class OriginAdapter:
         log.info('Saving Origin project...')
         try:
             path.parent.mkdir(parents=True,exist_ok=True)
+            # COM automation can have narrower directory access than this process.
+            # Save to a fresh staging file, then atomically publish from Python.
+            staging=tempfile.TemporaryDirectory(prefix='origin_project_',ignore_cleanup_errors=True)
+            self._project_staging.append(staging)
+            folder=staging.name
+            staged=Path(folder)/'project.opju'
             previous=self.op.lt_float('@SDO')
             try:
                 self.op.set_lt_var('@SDO',1)
-                if not self.op.save(str(path)):
-                    raise OriginExportError(f'Origin rejected project save: {path}')
+                if not self.op.save(str(staged)):
+                    raise OriginExportError(f'Origin rejected staged project save for: {path}')
             finally:
                 self.op.set_lt_var('@SDO',previous)
             for _ in range(30):
-                if path.is_file() and path.stat().st_size:
-                    return path
+                if staged.is_file() and staged.stat().st_size:
+                    break
                 time.sleep(0.1)
-            raise OriginExportError(f'No nonempty project appeared: {path}')
+            else:
+                raise OriginExportError(f'No nonempty staged project appeared for: {path}')
+            with tempfile.NamedTemporaryFile(dir=path.parent,prefix='.origin-',suffix='.opju',delete=False) as handle:
+                pending=Path(handle.name)
+            try:
+                shutil.copyfile(staged,pending)
+                pending.replace(path)
+            finally:
+                pending.unlink(missing_ok=True)
+            return path
         except OriginExportError:
             raise
         except Exception as exc:
@@ -260,3 +276,7 @@ class OriginAdapter:
             except Exception:
                 log.warning('Could not release Origin connection.',exc_info=True)
             self.connected=False
+
+        for staging in self._project_staging:
+            staging.cleanup()
+        self._project_staging.clear()

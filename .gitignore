@@ -31,3 +31,7 @@ scripts/inspect_liquid_crystal.py
 scripts/inspect_reference_origin.py
 scripts/verify_gui_hook.py
 README.local.md
+build/
+dist/
+release/
+bundle-test/

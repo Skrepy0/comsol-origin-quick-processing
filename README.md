@@ -2,6 +2,10 @@
 
 Windows 科研绘图工具：在现有 GitHub 项目的图形界面上，接入 Origin 自动绘图和图片导出。
 
+**无需 Python 的 Windows EXE：** 前往 [Releases](https://github.com/ikunabc/comsol-origin-quick-processing/releases/latest)
+下载 Windows x64 EXE，双击即可使用。也提供包含说明与依赖许可证的 ZIP。
+COMSOL 和 Origin 仍需单独安装授权；详见 [Windows EXE 说明](docs/WINDOWS_EXE.md)。
+
 COMSOL 已求解模型 → 原项目提取并导入 Origin → 配置曲线与样式 → PNG / TIFF / PDF / OPJU。
 
 ## 安装与双击启动

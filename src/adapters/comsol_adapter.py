@@ -10,10 +10,11 @@ import tempfile
 import numpy as np
 import pandas as pd
 from ..models import Dataset
+from ..runtime import RESOURCE_ROOT
 from ..exceptions import (CSVFormatError, COMSOLConnectionError, COMSOLModelError,
                           COMSOLResultNotFoundError)
 
-BACKEND = Path(__file__).resolve().parents[2] / 'lib' / 'comsol_csv_tool'
+BACKEND = RESOURCE_ROOT / 'lib' / 'comsol_csv_tool'
 log = logging.getLogger('pipeline')
 
 
