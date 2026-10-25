@@ -1,0 +1,3 @@
+[submodule "lib/comsol_csv_tool"]
+	path = lib/comsol_csv_tool
+	url = https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser.git

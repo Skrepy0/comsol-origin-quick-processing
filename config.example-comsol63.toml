@@ -1,0 +1,101 @@
+# Paths are relative to this TOML file. UTF-8; Python >= 3.11.
+[paths]
+output_dir = "output"
+processed_file = "data/processed/busbar_cli.csv"
+
+[comsol]
+mode = "mph"
+version = "6.3"
+model = "D:/Program Files/COMSOL/COMSOL63/Multiphysics/applications/COMSOL_Multiphysics/Multiphysics/busbar.mph"
+csv = "data/input/example.csv"
+csv_format = "auto" # auto | standard | backend | native
+encoding = "utf-8-sig"
+result_type = "table" # table | plot | 1d | 2d | 3d
+result_name = "mm1" # exact label or internal tag; duplicate labels are rejected
+low_memory = false
+# Exact column names, including units, can be mapped without changing A.
+[comsol.column_map]
+"温度" = "velocity"
+
+[processing]
+drop_nan = true
+sort = true
+enable_smoothing = false
+smoothing_method = "savgol"
+window_length = 11
+polyorder = 3
+enable_interpolation = true
+interpolation_method = "linear"
+interpolation_points = 101
+
+[origin]
+visible = true
+new_instance = true
+save_project = true
+project_file = "output/origin/busbar_cli.opju"
+close_on_finish = false
+
+[plot]
+graph_type = "line"
+x_column = "x"
+y_columns = ["velocity"]
+title = ""
+template = ""
+
+[plot.style]
+colors = ["#1F77B4"]
+line_styles = ["solid"]
+line_width = 2.0
+symbol = "circle"
+symbol_size = 5
+
+[plot.axis.x]
+title = "Position"
+unit = ""
+min = "auto"
+max = "auto"
+major_step = "auto"
+scale = "linear"
+
+[plot.axis.y]
+title = "Temperature"
+unit = "K"
+min = "auto"
+max = "auto"
+major_step = "auto"
+scale = "linear"
+
+[plot.font]
+family = "Arial"
+axis_title_size = 10
+tick_label_size = 8
+legend_size = 8
+title_size = 20
+
+[plot.legend]
+show = true
+position = "top_right"
+frame = false
+labels = ["Temperature"] # empty list derives long names; otherwise one per Y
+
+[plot.size]
+width = 1600
+height = 1200
+unit = "pixel"
+
+# Percent of page; control spacing independently from the Origin template.
+[plot.layout]
+left = 28
+top = 16
+width = 65
+height = 58
+legend_inset = 2
+title_gap = 3
+
+[export]
+enable = true
+directory = "output/figures"
+filename = "busbar_cli"
+format = "tiff"
+dpi = 600
+transparent = false # PNG/TIFF only; PDF true is rejected explicitly

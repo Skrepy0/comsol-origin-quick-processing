@@ -1,0 +1,101 @@
+# Paths are relative to this TOML file. UTF-8; Python >= 3.11.
+[paths]
+output_dir = "output"
+processed_file = "data/processed/result.csv"
+
+[comsol]
+mode = "mph"
+version = "6.3"
+model = "data/input/model.mph"
+csv = "data/input/example.csv"
+csv_format = "auto" # auto | standard | backend | native
+encoding = "utf-8-sig"
+result_type = "table" # table | plot | 1d | 2d | 3d
+result_name = "tbl5" # Table 5: line average 1; exact tag avoids label ambiguity
+low_memory = false
+# Exact column names, including units, can be mapped without changing A.
+[comsol.column_map]
+# "X (m)" = "x"
+
+[processing]
+drop_nan = true
+sort = true
+enable_smoothing = false
+smoothing_method = "savgol"
+window_length = 11
+polyorder = 3
+enable_interpolation = false
+interpolation_method = "cubic"
+interpolation_points = 1000
+
+[origin]
+visible = true
+new_instance = true
+save_project = true
+project_file = "output/origin/result.opju"
+close_on_finish = false
+
+[plot]
+graph_type = "line"
+x_column = "Time"
+y_columns = ["u2", "v2"]
+title = "Velocity versus time"
+template = ""
+
+[plot.style]
+colors = ["#1F77B4", "#D62728"]
+line_styles = ["solid", "dash"]
+line_width = 2.0
+symbol = "circle"
+symbol_size = 5
+
+[plot.axis.x]
+title = "Time"
+unit = "s"
+min = "auto"
+max = "auto"
+major_step = "auto"
+scale = "linear"
+
+[plot.axis.y]
+title = "Velocity"
+unit = "m/s"
+min = "auto"
+max = "auto"
+major_step = "auto"
+scale = "linear"
+
+[plot.font]
+family = "Arial"
+axis_title_size = 12
+tick_label_size = 10
+legend_size = 10
+title_size = 12
+
+[plot.legend]
+show = true
+position = "top_right"
+frame = false
+labels = ["u2 (line average 1)", "v2 (line average 1)"]
+
+[plot.size]
+width = 2400
+height = 1600
+unit = "pixel"
+
+# Percent of page; control spacing independently from the Origin template.
+[plot.layout]
+left = 28
+top = 16
+width = 65
+height = 58
+legend_inset = 2
+title_gap = 3
+
+[export]
+enable = true
+directory = "output/figures"
+filename = "result"
+format = "tiff"
+dpi = 600
+transparent = false # PNG/TIFF only; PDF true is rejected explicitly
