@@ -52,7 +52,7 @@ for name in names:
     versions[name]=dist.version
     destination=licenses/name
     destination.mkdir(exist_ok=True)
-    (destination/'METADATA.txt').write_text(str(dist.metadata),encoding='utf-8')
+    (destination/'METADATA.txt').write_text(dist.read_text('METADATA') or '',encoding='utf-8')
     copied=set()
     for item in dist.files or []:
         parts=[p.lower() for p in item.parts]
