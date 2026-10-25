@@ -1,6 +1,6 @@
 # COMSOL → Origin 快速处理
 
-Windows 科研绘图工具：在现有 GitHub 项目的图形界面上，接入 Origin 自动绘图和图片导出。
+Windows 科研绘图工具：在现有 GitHub 项目https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser的图形界面上，接入 Origin 自动绘图和图片导出。
 
 COMSOL 已求解模型 → 原项目提取并导入 Origin → 配置曲线与样式 → PNG / TIFF / PDF / OPJU。
 
