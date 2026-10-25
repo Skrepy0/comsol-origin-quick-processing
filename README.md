@@ -2,6 +2,7 @@
 
 Windows 科研绘图工具：在[COMSOL-to-CSV-and-Origin-parser](https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser)的基础上，接入 Origin 自动绘图和图片导出。
 
+工作流程：
 COMSOL 已求解模型 → 原项目提取并导入 Origin → 配置曲线与样式 → PNG / TIFF / PDF / OPJU。
 
 ## 安装与双击启动
