@@ -1,57 +1,60 @@
 # COMSOL → Origin 快速处理
 
-Windows 科研绘图工具：在[COMSOL-to-CSV-and-Origin-parser](https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser)的基础上，接入 Origin 自动绘图和图片导出。
+把 COMSOL 已求解模型中的结果导入 Origin，再按设置画图、导出图片。
 
-**无需 Python 的 Windows EXE：** 前往 [Releases](https://github.com/ikunabc/comsol-origin-quick-processing/releases/latest)
-下载 Windows x64 EXE，双击即可使用。也提供包含说明与依赖许可证的 ZIP。
-COMSOL 和 Origin 仍需单独安装授权；详见 [Windows EXE 说明](docs/WINDOWS_EXE.md)。
+这个项目基于 [COMSOL-to-CSV-and-Origin-parser](https://github.com/GhVost/COMSOL-to-CSV-and-Origin-parser)。模型读取和数据导入沿用原项目，新增了 Origin 绘图、图片导出和参数设置窗口。
 
-工作流程：
-COMSOL 已求解模型 → 原项目提取并导入 Origin → 配置曲线与样式 → PNG / TIFF / PDF / OPJU。
+## 下载与使用
 
-## 安装与双击启动
+Windows 用户可以直接到 [Releases](https://github.com/ikunabc/comsol-origin-quick-processing/releases/latest) 下载 EXE，双击打开，不需要安装 Python 或 Git。ZIP 包中另附使用说明和依赖许可证。
 
-需要 Git、64 位 Python 3.11 或 3.12、有效授权的 COMSOL 与 Origin 2025/2025b。
+电脑上仍需安装并授权 COMSOL 和 Origin 2025/2025b。模型要提前求解；用高版本 COMSOL 保存的模型，需要相应版本才能打开。
+
+1. 打开程序，点击 **Open** 选择 MPH 文件。
+2. 在结果列表中勾选要提取的内容。
+3. 点击 **Origin 绘图参数…**，填写要绘制的结果 Tag、X/Y 列，调整样式和导出目录。
+4. 勾选 **Import extracted results into OriginLab**，点击 **Extract**。
+
+提取的数据会导入 Origin，随后按设置绘图，导出 PNG、TIFF 或 PDF，并保存 OPJU 工程。图片保存在设置中的导出目录，工程保存在本次模型提取的输出目录。
+
+EXE 的配置和日志位于 `%LOCALAPPDATA%\COMSOLOrigin`。详细路径和构建方法见 [Windows 使用说明](docs/WINDOWS_EXE.md)。
+
+## 绘图设置
+
+在参数窗口中可以调整：
+
+- X/Y 数据列、折线/散点/柱形图、标题和 Origin 模板。
+- 曲线颜色、线型、线宽、符号大小和图例文字。
+- 坐标范围、刻度间隔、线性或对数坐标、坐标标题和单位。
+- 字体、字号、图例位置和图层边距。
+- 图片尺寸、DPI、透明背景、保存目录和文件名。
+- 无效值清理、排序、平滑和插值。
+
+保存后，下次提取会读取新设置，无需重启。上一份配置会备份为 `config.toml.ui-backup`。参数说明见 [绘图参数](docs/SETTINGS_UI.md)。
+
+修改单位文字不会换算数据。例如，将 m/s 改为 μm/s，还需要把数据乘以 10⁶。目前多条曲线来自同一数据集的多列；暂不支持合并多个模型或多张表，也不支持多面板排版。
+
+## 从源码运行
+
+需要 Git、64 位 Python 3.11 或 3.12，以及 COMSOL 和 Origin。
 
 ```powershell
 git clone --recurse-submodules https://github.com/ikunabc/comsol-origin-quick-processing.git
 cd comsol-origin-quick-processing
 ```
 
-1. 双击 `Setup-GUI.cmd`，初始化 submodule 并安装 Python 依赖。
-2. 双击 `Start-GUI.cmd`，打开原项目的模型读取和结果选择界面。
-3. 点击顶部 **Origin 绘图参数…**，设置结果 Tag、X/Y 列和绘图样式。
-4. 打开已求解 MPH，勾选对应结果及“Import extracted results into OriginLab”，点击 Extract。
+首次运行双击 `Setup-GUI.cmd` 安装依赖，之后双击 `Start-GUI.cmd` 启动。也可以用 `Origin-Settings.cmd` 单独打开参数窗口。
 
-也可双击 `Origin-Settings.cmd`，单独打开参数设置窗口。
-首次启动自动从 `config.default.toml` 生成本机 `config.toml`。本机配置、模型、工程、输出和日志不会提交到 Git。
+首次启动会从 `config.default.toml` 创建 `config.toml`。本机配置、模型、输出文件和日志已加入 Git 忽略规则。
 
-安装失败时，检查 Python、Git、网络和许可证；已有 clone 可执行：
+如果下载源码时漏掉了子模块，可以在项目目录执行：
 
 ```powershell
 git submodule update --init --recursive
 python -m pip install -r requirements-gui.txt
 ```
 
-## 可视化参数
-
-- 曲线：line、line_symbol、scatter、column；X/Y 列、标题、Origin 模板。
-- 每条曲线：颜色选择器、实线/虚线/点线/点划线、图例文字；统一线宽与符号大小。
-- 坐标：标题、显示单位、min/max/major_step 自动或手动、linear/log10。
-- 字体与图例：字体、各类字号、位置、边框、图层边距。
-- 导出：像素宽高、PNG/TIFF/PDF、DPI、透明背景、目录和文件名。
-- 数据处理：NaN/Inf 清理、排序、Savitzky–Golay/移动平均/中值滤波，以及 linear/cubic/pchip 插值。
-
-“保存设置”先校验再原子写入，并备份到 `config.toml.ui-backup`；原界面导入后读取最新设置，无需重启。
-单位标签不会自动换算数值。m/s → μm/s 必须对数据实际乘以 10⁶。
-多 Y 当前指同一个数据集中的多列；跨多表、多模型条件合并和多面板绘图尚未实现。
-
-## 两种工作方式
-
-**GUI 模式（推荐）**：复用原项目读取、勾选、提取、导入流程；新增适配器只在导入后复用 Workbook 绘图。
-OPJU 保存到原项目本次输出目录；图片按设置中的导出路径保存。
-
-**可选命令行模式**：
+### 命令行
 
 ```powershell
 python main.py
@@ -61,73 +64,66 @@ python main.py --dry-run
 python main.py --list-results
 ```
 
-CSV 模式不启动 COMSOL。附带 example.csv 是合成数据；不附带科研模型。
---check 不启动应用，检查包版本、submodule、COMSOL 安装及 Origin COM 注册。
---dry-run 只打印计划；--list-results 加载模型列出 Tables/1D/2D/3D，不求解。
+- `--check`：检查依赖、COMSOL 安装和 Origin COM 注册，不启动软件引擎。
+- `--dry-run`：显示本次运行计划。
+- `--list-results`：加载模型并列出可用结果，不求解模型。
 
-## 后端与真实 API
+CSV 模式不启动 COMSOL。项目附带的 `example.csv` 是合成数据，可用来试跑；不提供科研模型。
 
-以 Git submodule 保存在 `lib/comsol_csv_tool/`，固定 commit：
-`4c63ac17fbb6272603a893e0233c6d27aa485180`。
-不复制、不修改上游源码，兼容和扩展在 `src/adapters/`。
+## 使用时要注意
 
-实际调用 `discover_items`、`extract_table`、`extract_via_export`；Origin 使用官方 originpro/OriginExt，
-不模拟鼠标键盘。源码核查见 [API_AUDIT.md](docs/API_AUDIT.md)。
+- 程序读取已有结果，不负责求解，也不保存源 MPH 文件。
+- Savitzky–Golay 平滑要求 X 近似等距。插值要求 X 唯一且递增，三次插值至少需要 4 个点。
+- 参数扫描混在同一列时，应先拆分条件。重复的 X 不能直接当作一条曲线插值。
+- 插值后只保留选中的 X/Y 列，其他列不会自动补值。
+- 图片的物理尺寸由像素尺寸和 DPI 决定。PDF 为矢量页面；透明背景只支持 PNG、TIFF。
+- 程序不会处理 COMSOL 或 Origin 的授权问题，软件生成的试用水印也会保留。
 
-## 数据与图像约束
+## 常见问题
 
-- 模型需要事先求解；不调用 solve 或保存源 MPH。高版本保存的模型需要兼容版本的 COMSOL。
-- Savitzky–Golay 要求近似等距 X；插值要求唯一递增 X；cubic 至少 4 点。
-- 拼接参数扫描被拒绝跨扫描平滑；应先拆分条件或准备独立 Y 宽表。
-- 插值会移除未选中列，避免给新网格伪造其他物理量。
-- 图页物理尺寸 = 像素尺寸 / DPI。PDF 是矢量页面，没有整页像素 DPI；透明背景仅支持 PNG/TIFF。
-- GUI 内部临时会话隐藏地追加图并保存，完成后由原项目打开工程；失败保留已导入工程并提示错误。
-- COMSOL/Origin 必须自行安装与授权；若软件输出 demo 水印，需要处理软件授权。
+**找不到 COMSOL，或提示许可证错误**
 
-## 项目结构
+先确认 COMSOL 能单独打开模型。源码运行可用 `--check` 检查安装版本。高版本 MPH 无法用低版本 COMSOL 打开。
 
-```text
-Start-GUI.cmd / Origin-Settings.cmd / Setup-GUI.cmd
-gui_main.py / origin_settings.py / main.py
-config.default.toml / config.example-*.toml
-src/
-  settings_ui.py           # 可视化参数编辑器
-  config.py / pipeline.py / diagnostics.py
-  adapters/
-    comsol_adapter.py      # 原项目真实提取 API 包装
-    gui_adapter.py         # 原界面导入后追加绘图
-    origin_adapter.py      # Origin 图形与导出
-    process_adapter.py     # 科学数据处理
-  models/dataset.py
-lib/comsol_csv_tool/       # 上游 submodule
-scripts/                  # 合成数据、安装示例和 UI 验证
- tests/                   # 配置、处理、CSV、适配器测试
-```
+**提示找不到结果或数据列**
 
-## 测试
+检查结果 Tag 是否与界面勾选的内容一致。源码运行可用 `--list-results` 查看 Tag。X/Y 列使用去掉单位后的表头名称；重名列需要在 `column_map` 中分别命名。
+
+**Origin 无法连接**
+
+先手动启动 Origin，完成首次运行和许可提示。源码运行还需确认 Python 为 64 位，并已安装 `originpro`、`OriginExt`。
+
+**图片或工程保存失败**
+
+检查输出目录是否可写、文件是否被占用，以及 Origin 是否有未关闭的对话框。路径过长时，可以先改用较短的本地目录。
+
+**图页在 Origin 窗口里显得很小**
+
+先检查显示缩放比例，将图页设为适应窗口。窗口周围的灰色区域不会导出；白色图页内的留白可通过图层边距调整。
+
+**CSV 读不出来**
+
+尝试指定 `standard`、`backend` 或 `native` 格式，并检查编码。程序不会自动识别使用逗号作小数点的文件。
+
+报错详情见 `logs/gui.log` 和 `logs/pipeline.log`；EXE 的日志在 `%LOCALAPPDATA%\COMSOLOrigin\logs`。
+
+## 开发与测试
+
+上游项目以 Git 子模块放在 `lib/comsol_csv_tool/`，当前固定版本为 `4c63ac17fbb6272603a893e0233c6d27aa485180`，未修改上游源码。新增功能主要在 `src/adapters/`，参数窗口在 `src/settings_ui.py`。
+
+Origin 操作通过 `originpro` / `OriginExt` 完成。接口记录见 [API_AUDIT.md](docs/API_AUDIT.md)。更新上游后，需要重新检查接口和运行结果。
 
 ```powershell
 python -m pip install -r requirements-dev.txt
 python -m pytest -q
-# 需 GUI 依赖，不启动 COMSOL/Origin 引擎：
 python scripts/verify_settings_ui.py
-# 实际 Origin 合成数据绘图与文件检查：
+```
+
+实际连接 Origin 的检查另行运行：
+
+```powershell
 python scripts/verify_origin.py
 python scripts/verify_images.py
 ```
 
-本机验证覆盖 COMSOL 6.3/6.4 的已求解数据提取、Origin 2025b Workbook、四类图型、
-PNG/TIFF/PDF、透明 PNG/TIFF、OPJU 重开，以及 Qt 参数保存与原窗口接入。
-这是运行环境相关结果，不保证其他版本/许可证配置自动通过。完整原始科研测试记录保留在本机，不公开上传。
-
-## 常见问题
-
-- COMSOL 未发现或 license 错误：检查安装和授权，使用 --check 检查版本；高版本 MPH 不能由低版本打开。
-- 结果/列名不存在：--list-results 查询 tag；表头去单位后的名称用于 X/Y 配置，重复名称需 column_map。
-- GUI 选中结果与绘图设置不一致：导入仍可完成，自动绘图会明确提示缺少配置结果。
-- Origin 连接失败：先手动完成首次运行和许可提示，确认 64 位 Python 与 originpro/OriginExt。
-- CSV 解析失败：显式指定 standard/backend/native 格式及 encoding；不自动推断十进制逗号。
-- 导出/保存失败：检查路径、权限、文件锁与 Origin 对话框；长路径 OPJU 建议改用短本地路径。
-- 日志：`logs/gui.log` 和 `logs/pipeline.log`；终端/弹窗显示简洁错误，完整 traceback 在日志。
-
-更新上游后应重新审查 API 并验证：`git submodule update --remote --recursive`。
+本机已做过 COMSOL 6.3/6.4 数据提取，以及 Origin 2025b 绘图、图片导出和工程重开的检查。不同软件版本、许可证和目录权限仍可能影响结果；全新无 Python 环境和 Windows 10 尚未单独实测。
